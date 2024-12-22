@@ -5,7 +5,7 @@ pipeline {
         maven 'Maven3'
     }
     environment{
-        SONARQUBE_SERVER = 'Sonar-Scanner'
+        SONARQUBE_SERVER = 'Sonar-Server'
     }
     stages {
         stage('git-checkout') {
@@ -29,9 +29,10 @@ pipeline {
         stage('sonar test') {
           steps {
             withSonarQubeEnv('Sonar-Server') {
-              sh ''' $SONARQUBE_SERVER/bin/Sonar-Scanner -Dsonar.projectName=Santa \
-              -Dsonar.java.binaries=. \
-              -Dsonar.projectKey=Santa '''
+              sh "mvn sonar:sonar \
+              -Dsonar.projectKey=secretsanta-generator \
+              -Dsonar.host.url=${192.168.1.9:9000} \
+              -Dsonar.login=${Sonar-Cred}"
             }
           }
         }
