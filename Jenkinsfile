@@ -31,8 +31,8 @@ pipeline {
             withSonarQubeEnv('Sonar-Server') {
               sh "mvn sonar:sonar \
               -Dsonar.projectKey=secretsanta-generator \
-              -Dsonar.host.url=${192.168.1.9:9000} \
-              -Dsonar.login=${Sonar-Cred}"
+              -Dsonar.host.url=${SONAR_HOST_URL} \
+              -Dsonar.login=${SONAR_AUTH_TOKEN}"
             }
           }
         }
