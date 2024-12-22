@@ -5,7 +5,7 @@ pipeline {
         maven 'Maven3'
     }
     environment{
-        SONARQUBE_SERVER = 'Sonar-Server'
+        SCANNER_HOME= tool 'Sonar-Scanner-tool'
     }
     stages {
         stage('git-checkout') {
@@ -26,15 +26,14 @@ pipeline {
           }
         }
 
-        stage('sonar test') {
-          steps {
-            withSonarQubeEnv('Sonar-Server') {
-              sh "mvn sonar:sonar \
-              -Dsonar.projectKey=secretsanta-generator \
-              -Dsonar.host.url=${SONAR_HOST_URL} \
-              -Dsonar.login=${SONAR_AUTH_TOKEN}"
+        stage('Sonar Analysis') {
+            steps {
+               withSonarQubeEnv('Sonar-Server'){
+                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Santa \
+                   -Dsonar.java.binaries=. \
+                   -Dsonar.projectKey=Santa '''
+               }
             }
-          }
         }
     }            
     
